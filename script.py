@@ -102,4 +102,3 @@ def initBfs(parent, level, vertices):
     level = [-1 for i in range(vertices + 1)]
 
     return parent, level
-
