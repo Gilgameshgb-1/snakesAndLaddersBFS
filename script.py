@@ -1,3 +1,7 @@
+import matplotlib.pyplot as plt
+import matplotlib.colors as cl
+import numpy as np
+
 def generateAdjacencyList():
     vertices = 100
     
@@ -54,8 +58,48 @@ def breadthFirstSearch(adjacencyList, parent, level, start):
 
     return parent, level
 
+def visualize_board(board_size, snakes, ladders):
+    board = np.zeros((board_size, board_size), dtype=int)
+
+    for i in range(board_size):
+        for j in range(board_size):
+            board[i][j] = i*board_size + j + 1
+
+    fig, ax = plt.subplots()
+    ax.set_ylim(0.5, board_size - 1)
+    ax.set_xlim(0.5, board_size - 1)
+    ax.imshow(board, cmap=cl.ListedColormap(["lightgray"]))
+    ax.grid(which='both', color='black', linewidth=1)
+
+
+
+    for snake in snakes:
+        start, end = snake
+        start_i, start_j = divmod(start-1, board_size)
+        end_i, end_j = divmod(end-1, board_size)
+        ax.annotate("", xy=(end_j, board_size-end_i-1), xycoords='data',
+                    xytext=(start_j, board_size-start_i-1), textcoords='data',
+                    arrowprops=dict(arrowstyle="->",
+                                    connectionstyle="arc3,rad=-0.2",
+                                    color='red'))
+
+    for ladder in ladders:
+        start, end = ladder
+        start_i, start_j = divmod(start-1, board_size)
+        end_i, end_j = divmod(end-1, board_size)
+        ax.annotate("", xy=(end_j, board_size-end_i-1), xycoords='data',
+                    xytext=(start_j, board_size-start_i-1), textcoords='data',
+                    arrowprops=dict(arrowstyle="->",
+                                    connectionstyle="arc3,rad=0.2",
+                                    color='green'))
+
+    plt.xticks(np.arange(board_size), [i+1 for i in range(board_size)])
+    plt.yticks(np.arange(board_size), [i+1 for i in range(board_size)])
+    plt.show()
+
 def initBfs(parent, level, vertices):
     parent = [-1 for i in range(vertices + 1)]
     level = [-1 for i in range(vertices + 1)]
 
     return parent, level
+
